@@ -1,0 +1,32 @@
+# Error Analyzer - Advanced Analysis Engines
+# Phase 6: 고급 분석 엔진 통합
+
+# 코드 품질 & 린팅
+ruff>=0.1.0
+
+# Flask 웹 서버
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# 코드 분석
+pyflakes>=3.1.0
+pylint>=3.0.0
+bandit>=1.7.5
+
+# RAG 및 Vector DB (NEW)
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+google-generativeai>=0.3.0
+torch>=2.0.0
+transformers>=4.30.0
+
+# 타입 체크
+mypy>=1.7.0
+
+# 보안 스캔
+bandit>=1.7.0
+
+# 선택적 도구 (향후 추가 가능)
+# flake8>=6.0.0
+# black>=23.0.0
+# isort>=5.12.0

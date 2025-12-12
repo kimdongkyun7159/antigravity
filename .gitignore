@@ -1,0 +1,77 @@
+# API 키 및 민감한 정보
+.env
+.env.local
+*.key
+*.pem
+
+# Python 캐시 및 빌드
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 가상환경
+venv/
+ENV/
+env/
+.venv
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# 데이터베이스 (대용량 방지)
+*.db-journal
+*.sqlite3-journal
+
+# Vector DB (대용량)
+data/chroma/*
+!data/chroma/.gitkeep
+
+# 업로드 파일
+uploads/*
+!uploads/.gitkeep
+outputs/*
+!outputs/.gitkeep
+
+# 로그 파일
+*.log
+logs/
+
+# OS 파일
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 임시 파일
+*.tmp
+*.bak
+*.swp
+*~
+
+# 대용량 모델 파일 (있을 경우)
+*.pth
+*.h5
+*.pkl
+*.ckpt
+*.safetensors
+
+# 테스트 데이터
+test_data/
+temp/
