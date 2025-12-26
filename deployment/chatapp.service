@@ -1,0 +1,47 @@
+# Systemd 서비스 파일
+# 위치: /etc/systemd/system/chatapp.service
+
+[Unit]
+Description=Chat Application with Flask-SocketIO
+After=network.target
+
+[Service]
+Type=notify
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/antigravity
+
+# 환경 변수
+Environment="PATH=/home/ubuntu/antigravity/venv/bin"
+Environment="FLASK_ENV=production"
+Environment="PYTHONUNBUFFERED=1"
+
+# .env 파일 로드 (선택)
+EnvironmentFile=/home/ubuntu/antigravity/.env
+
+# 실행 명령
+# Gunicorn + eventlet worker (Socket.IO 지원)
+ExecStart=/home/ubuntu/antigravity/venv/bin/gunicorn \
+    --worker-class eventlet \
+    --workers 1 \
+    --bind 127.0.0.1:5000 \
+    --timeout 60 \
+    --log-level info \
+    --access-logfile /var/log/chatapp/access.log \
+    --error-logfile /var/log/chatapp/error.log \
+    app:app
+
+# 재시작 정책
+Restart=always
+RestartSec=5
+StartLimitInterval=0
+
+# 보안 설정
+NoNewPrivileges=true
+PrivateTmp=true
+
+# 리소스 제한
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
