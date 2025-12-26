@@ -46,14 +46,14 @@ echo.
 echo [3/4] Skills 자동 연결 중...
 
 REM 심볼릭 링크 생성
-mklink /D "%USERPROFILE%\.claude\skills\antigravity_plugins" "c:\antigravity\claude_plugins\skills"
+mklink /D "%USERPROFILE%\.claude\skills\antigravity_plugins" "c:\antigravity\plugins\skills"
 
 if %errorlevel% equ 0 (
     echo    ✓ 심볼릭 링크 생성 성공!
     echo.
     echo [4/4] Skills 목록 확인 중...
     echo.
-    dir /b "c:\antigravity\claude_plugins\skills"
+    dir /b "c:\antigravity\plugins\skills"
     echo.
     echo ╔══════════════════════════════════════════════════════════════╗
     echo ║  ✓ 설정 완료!                                               ║
@@ -74,7 +74,7 @@ if %errorlevel% equ 0 (
     echo    ✗ 심볼릭 링크 생성 실패
     echo.
     echo 대안: 수동 복사 방법
-    echo   xcopy /E /I /Y "c:\antigravity\claude_plugins\skills" "%USERPROFILE%\.claude\skills\antigravity_plugins"
+    echo   xcopy /E /I /Y "c:\antigravity\plugins\skills" "%USERPROFILE%\.claude\skills\antigravity_plugins"
     echo.
 )
 

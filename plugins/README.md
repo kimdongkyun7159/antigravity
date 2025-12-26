@@ -23,7 +23,7 @@
 
 ```powershell
 # 관리자 권한으로 실행
-c:\antigravity\claude_plugins\setup_auto_skills.bat
+c:\antigravity\plugins\setup_auto_skills.bat
 ```
 
 **이게 전부입니다!** 이제 모든 프로젝트에서 자동으로 작동합니다! ✅
@@ -101,7 +101,7 @@ Claude: [자동으로 Database Query Skill 활성화] ✅
 ## 📂 폴더 구조
 
 ```
-c:\antigravity\claude_plugins\
+c:\antigravity\plugins\
 ├── skills\                          ← Skills 정의 (자동 활성화)
 │   ├── github_integration.md
 │   ├── sentry_debugger.md
@@ -131,7 +131,7 @@ your-project\
 
 ### 새 Skill 추가하기
 
-1. `c:\antigravity\claude_plugins\skills\` 폴더에 새 `.md` 파일 생성
+1. `c:\antigravity\plugins\skills\` 폴더에 새 `.md` 파일 생성
 2. Skill 형식으로 작성 (기존 파일 참고)
 3. **즉시 자동 인식됨!** 재설정 불필요 ✅
 
@@ -140,7 +140,7 @@ your-project\
 특정 Skill 일시 비활성화:
 ```powershell
 # 파일 이름 변경 (.md → .md.disabled)
-ren "c:\antigravity\claude_plugins\skills\github_integration.md" "github_integration.md.disabled"
+ren "c:\antigravity\plugins\skills\github_integration.md" "github_integration.md.disabled"
 ```
 
 ---
@@ -193,7 +193,7 @@ Skill 제작 가이드: https://code.claude.com/docs/en/skills.md
 ### "Skills가 자동 활성화 안 돼요"
 1. 설정 스크립트 실행했는지 확인
 2. 심볼릭 링크 확인: `dir "%USERPROFILE%\.claude\skills"`
-3. Skills 파일 경로 확인: `dir "c:\antigravity\claude_plugins\skills"`
+3. Skills 파일 경로 확인: `dir "c:\antigravity\plugins\skills"`
 
 ### "MCP 서버 연결 실패"
 1. `claude --version` 명령어로 Claude CLI 설치 확인
