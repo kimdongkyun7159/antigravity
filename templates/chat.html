@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실시간 채팅 앱 💬</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <!-- 헤더 -->
+        <div class="chat-header">
+            <div class="header-content">
+                <h1>💬 실시간 채팅</h1>
+                <div class="online-users">
+                    <span class="status-indicator"></span>
+                    <span id="userCount">0명 온라인</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 채팅 영역 -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome-message">
+                <h2>환영합니다! 👋</h2>
+                <p>아래에서 닉네임을 입력하고 채팅을 시작하세요.</p>
+            </div>
+        </div>
+
+        <!-- 입력 영역 -->
+        <div class="chat-input-container">
+            <!-- 닉네임 입력 (처음에만 표시) -->
+            <div class="username-input" id="usernameInput">
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="닉네임을 입력하세요..."
+                    maxlength="20"
+                    autocomplete="off"
+                >
+                <button id="joinBtn" class="btn-join">입장하기</button>
+            </div>
+
+            <!-- 메시지 입력 (입장 후 표시) -->
+            <div class="message-input" id="messageInput" style="display: none;">
+                <div class="input-wrapper">
+                    <input
+                        type="text"
+                        id="messageText"
+                        placeholder="메시지를 입력하세요..."
+                        maxlength="500"
+                        autocomplete="off"
+                    >
+                    <button id="sendBtn" class="btn-send">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="chat-info">
+                    <span id="currentUsername"></span>
+                    <button id="leaveBtn" class="btn-leave">나가기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Socket.IO 클라이언트 -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='chat.js') }}"></script>
+</body>
+</html>

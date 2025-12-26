@@ -4,8 +4,10 @@ Flask 백엔드 - 최신 RESTful API
 
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
+from flask_socketio import SocketIO, emit, join_room, leave_room
 import os
 import sys
+from datetime import datetime
 
 # 모듈 경로 추가
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -21,9 +23,16 @@ from modules.config import Config
 app = Flask(__name__)
 CORS(app)  # CORS 활성화
 
+# Socket.IO 초기화
+socketio = SocketIO(app, cors_allowed_origins="*")
+
 # 설정
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['SECRET_KEY'] = 'your-secret-key-here'  # 실제 환경에서는 환경 변수로 관리
+
+# 채팅 사용자 관리
+chat_users = {}  # {session_id: username}
 
 # 업로드 폴더 생성
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -318,20 +327,20 @@ def validate_only():
     try:
         data = request.get_json()
         code = data.get('code', '')
-        
+
         if not code:
             return jsonify({
                 'success': False,
                 'error': '코드가 비어있습니다'
             }), 400
-        
+
         validation_result = CodeValidator.full_validation(code)
-        
+
         return jsonify({
             'success': True,
             'validation': validation_result
         })
-        
+
     except Exception as e:
         return jsonify({
             'success': False,
@@ -339,12 +348,100 @@ def validate_only():
         }), 500
 
 
+@app.route('/chat')
+def chat():
+    """채팅 페이지"""
+    return render_template('chat.html')
+
+
+# =============================================
+# Socket.IO 이벤트 핸들러 - 실시간 채팅
+# =============================================
+
+@socketio.on('connect')
+def handle_connect():
+    """클라이언트 연결"""
+    print(f'클라이언트 연결: {request.sid}')
+
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    """클라이언트 연결 해제"""
+    if request.sid in chat_users:
+        username = chat_users[request.sid]
+        del chat_users[request.sid]
+
+        # 퇴장 알림
+        emit('user_left', {
+            'username': username,
+            'user_count': len(chat_users)
+        }, broadcast=True)
+
+        print(f'클라이언트 연결 해제: {request.sid} ({username})')
+
+
+@socketio.on('join')
+def handle_join(data):
+    """채팅방 입장"""
+    username = data.get('username', '익명')
+    chat_users[request.sid] = username
+
+    # 입장 알림
+    emit('user_joined', {
+        'username': username,
+        'user_count': len(chat_users)
+    }, broadcast=True)
+
+    # 현재 접속자 수 전송
+    emit('user_count', {
+        'count': len(chat_users)
+    })
+
+    print(f'{username}님이 채팅방에 입장했습니다. (총 {len(chat_users)}명)')
+
+
+@socketio.on('leave')
+def handle_leave(data):
+    """채팅방 퇴장"""
+    username = data.get('username', '익명')
+
+    if request.sid in chat_users:
+        del chat_users[request.sid]
+
+    # 퇴장 알림
+    emit('user_left', {
+        'username': username,
+        'user_count': len(chat_users)
+    }, broadcast=True)
+
+    print(f'{username}님이 채팅방을 나갔습니다. (총 {len(chat_users)}명)')
+
+
+@socketio.on('message')
+def handle_message(data):
+    """메시지 전송"""
+    username = data.get('username', '익명')
+    message = data.get('message', '')
+    timestamp = data.get('timestamp', datetime.now().isoformat())
+
+    # 모든 클라이언트에게 메시지 브로드캐스트
+    emit('message', {
+        'username': username,
+        'message': message,
+        'timestamp': timestamp
+    }, broadcast=True)
+
+    print(f'[{username}] {message}')
+
+
 if __name__ == '__main__':
     print("=" * 60)
     print("🔍 Python Error Analyzer - Web Server")
+    print("💬 실시간 채팅 기능 추가")
     print("=" * 60)
-    print(f"🌐 서버 주소: http://localhost:5000")
+    print(f"🌐 메인 페이지: http://localhost:5000")
+    print(f"💬 채팅 페이지: http://localhost:5000/chat")
     print("=" * 60)
     print()
-    
-    app.run(debug=True, host='0.0.0.0', port=5000)
+
+    socketio.run(app, debug=True, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)

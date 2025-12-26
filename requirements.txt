@@ -7,6 +7,7 @@ ruff>=0.1.0
 # Flask 웹 서버
 flask>=3.0.0
 flask-cors>=4.0.0
+flask-socketio>=5.3.0
 
 # 코드 분석
 pyflakes>=3.1.0
